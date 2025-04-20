@@ -96,9 +96,13 @@ class PPOTrainer:
                     new_probs = self.policy_net(states_tensor)
                     new_action_probs = new_probs.gather(1, actions_tensor.unsqueeze(1))
 
+                    # 重要性采样比率
                     ratios = new_action_probs / old_action_probs
+
+                    # 优势函数估计 (简化版)
                     advantages = rewards_tensor - rewards_tensor.mean()
 
+                    # PPO-Clip目标函数
                     surr1 = ratios * advantages
                     surr2 = torch.clamp(ratios, 1-self.clip_epsilon, 1+self.clip_epsilon) * advantages
                     policy_loss = -torch.min(surr1, surr2).mean()
