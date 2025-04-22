@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<mujoco>
+  <compiler angle="radian" coordinate="local" inertiafromgeom="true"/>
+  <option timestep="0.001" iterations="50" tolerance="1e-10" cone="elliptic"/>
+  
+  <default>
+    <joint armature="0.1" damping="0.1" limited="true"/>
+    <geom contype="1" conaffinity="1" condim="3" friction="1.0 0.5 0.5" rgba="0.7 0.7 0.7 1"/>
+  </default>
+  
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".1 .2 .3" rgb2=".2 .3 .4" width="512" height="512"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+    <material name="body" rgba=".7 .5 .3 1"/>
+    <material name="wheel" rgba=".1 .1 .1 1"/>
+  </asset>
+  
+  <worldbody>
+    <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+    <geom name="ground" type="plane" size="100 100 0.1" material="grid" pos="0 0 0"/>
+    
+    <body name="car" pos="0 0 0.5">
+      <!-- 车身 -->
+      <joint name="car_joint" type="free"/>
+      <geom name="body" type="box" size="1.0 0.5 0.3" material="body" pos="0 0 0.3"/>
+      
+      <!-- 前轮 -->
+      <body name="front_left_wheel" pos="0.8 0.5 0">
+        <joint name="front_left_steer" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
+        <joint name="front_left_drive" type="hinge" axis="0 1 0"/>
+        <geom name="front_left_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
+      </body>
+      
+      <body name="front_right_wheel" pos="0.8 -0.5 0">
+        <joint name="front_right_steer" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
+        <joint name="front_right_drive" type="hinge" axis="0 1 0"/>
+        <geom name="front_right_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
+      </body>
+      
+      <!-- 后轮 -->
+      <body name="rear_left_wheel" pos="-0.8 0.5 0">
+        <joint name="rear_left_drive" type="hinge" axis="0 1 0"/>
+        <geom name="rear_left_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
+      </body>
+      
+      <body name="rear_right_wheel" pos="-0.8 -0.5 0">
+        <joint name="rear_right_drive" type="hinge" axis="0 1 0"/>
+        <geom name="rear_right_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
+      </body>
+    </body>
+  </worldbody>
+  
+  <actuator>
+    <!-- 转向控制 -->
+    <motor name="steering" joint="front_left_steer" gear="1"/>
+    <motor name="steering" joint="front_right_steer" gear="1"/>
+    
+    <!-- 驱动控制 -->
+    <motor name="throttle" joint="rear_left_drive" gear="100"/>
+    <motor name="throttle" joint="rear_right_drive" gear="100"/>
+  </actuator>
+</mujoco> 

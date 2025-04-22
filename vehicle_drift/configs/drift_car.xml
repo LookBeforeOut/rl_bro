@@ -1,0 +1,66 @@
+<mujoco model="drift_car">
+  <compiler inertiafromgeom="true" angle="radian"/>
+
+  <option timestep="0.01" gravity="0 0 -9.81"/>
+
+  <default>
+    <joint damping="1" limited="true"/>
+    <geom friction="1 0.1 0.001" density="300" condim="3" contype="1" conaffinity="1"/>
+    <motor ctrllimited="true" ctrlrange="-1 1"/>
+  </default>
+
+  <asset>
+    <texture name="texplane" type="2d" builtin="checker" width="256" height="256" rgb1=".2 .3 .4" rgb2=".1 .2 .3"/>
+    <material name="matplane" texture="texplane" texrepeat="4 4" reflectance="0.1"/>
+  </asset>
+
+  <worldbody>
+    <geom name="ground" type="plane" size="20 20 0.1" material="matplane"/>
+
+    <!-- Main Car Body -->
+    <body name="chassis" pos="0 0 0.1">
+      <freejoint/>
+      <geom name="body" type="box" size="0.15 0.1 0.05" rgba="0.3 0.3 0.3 1"/>
+
+      <!-- Front Left: steerable -->
+      <body name="front_left_steer" pos="0.13 0.09 0">
+        <joint name="steer_fl" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
+        <body name="front_left_wheel" pos="0 0 0">
+          <joint name="wheel_fl" type="hinge" axis="1 0 0"/>
+          <geom type="cylinder" size="0.03 0.02" rgba="0.2 0.2 0.8 1"/>
+        </body>
+      </body>
+
+      <!-- Front Right: steerable -->
+      <body name="front_right_steer" pos="0.13 -0.09 0">
+        <joint name="steer_fr" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
+        <body name="front_right_wheel" pos="0 0 0">
+          <joint name="wheel_fr" type="hinge" axis="1 0 0"/>
+          <geom type="cylinder" size="0.03 0.02" rgba="0.2 0.2 0.8 1"/>
+        </body>
+      </body>
+
+      <!-- Rear Left -->
+      <body name="rear_left" pos="-0.13 0.09 0">
+        <joint name="wheel_rl" type="hinge" axis="1 0 0"/>
+        <geom type="cylinder" size="0.03 0.02" rgba="0.8 0.2 0.2 1"/>
+      </body>
+
+      <!-- Rear Right -->
+      <body name="rear_right" pos="-0.13 -0.09 0">
+        <joint name="wheel_rr" type="hinge" axis="1 0 0"/>
+        <geom type="cylinder" size="0.03 0.02" rgba="0.8 0.2 0.2 1"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Front wheel steering -->
+    <motor name="steer_fl_motor" joint="steer_fl" gear="0.5"/>
+    <motor name="steer_fr_motor" joint="steer_fr" gear="0.5"/>
+
+    <!-- Rear wheel drive -->
+    <motor name="drive_rl" joint="wheel_rl" gear="100"/>
+    <motor name="drive_rr" joint="wheel_rr" gear="100"/>
+  </actuator>
+</mujoco>
