@@ -50,7 +50,7 @@ class Trainer:
         """
         deltas = rewards[:-1] + self.gamma * values[1:] - values[:-1]
         advantages = np.zeros_like(rewards)
-        last_gae = 0
+        last_gae = 0.0
         
         for t in reversed(range(len(deltas))):
             last_gae = deltas[t] + self.gamma * self.lam * last_gae
@@ -83,7 +83,7 @@ class Trainer:
                 action, logp, value = self.algorithm.policy.get_action(obs_tensor)
                 action = action.numpy()
                 logp = logp.numpy()
-                value = value.numpy()
+                value = value.item()  # 确保value是标量
             
             # 执行动作
             next_obs, reward, done, info = self.env.step(action)

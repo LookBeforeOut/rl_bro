@@ -35,8 +35,8 @@ class MujocoDriftEnv(BaseDriftEnv):
         
         # 初始化渲染器
         self.renderer = None
-        if config.get('render_mode') == 'human':
-            self.renderer = mujoco.Renderer(self.model)
+        # if config.get('render_mode') == 'human':
+        #     self.renderer = mujoco.Renderer(self.model)
         
         # 控制参数
         self.control_freq = config.get('control_freq', 50)
@@ -127,18 +127,18 @@ class MujocoDriftEnv(BaseDriftEnv):
         
         # 计算奖励
         reward = (
-            self.config['reward']['drift_angle_weight'] * abs(drift_angle) +
-            self.config['reward']['velocity_weight'] * velocity
+            1.0 * abs(drift_angle) +  # 漂移角度权重
+            0.1 * velocity  # 速度权重
         )
         
         # 添加控制惩罚
-        reward -= self.config['reward']['control_penalty'] * (
+        reward -= 0.01 * (  # 控制惩罚权重
             abs(self.data.ctrl[0]) + abs(self.data.ctrl[1])
         )
         
         # 检查碰撞
         if self._check_collision():
-            reward += self.config['reward']['crash_penalty']
+            reward -= 10.0  # 碰撞惩罚
         
         return reward
     

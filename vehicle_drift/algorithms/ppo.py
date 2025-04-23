@@ -4,6 +4,7 @@ import torch.optim as optim
 import numpy as np
 from typing import Dict, Any, Tuple
 from vehicle_drift.algorithms.base_algorithm import BaseAlgorithm
+import os
 
 class PPOPolicy(nn.Module):
     """PPO策略网络"""
@@ -78,7 +79,7 @@ class PPO(BaseAlgorithm):
         Args:
             config: 算法配置参数
         """
-        super().__init__()
+        super().__init__(config)
         self.config = config
         
         # 创建策略网络
@@ -156,6 +157,9 @@ class PPO(BaseAlgorithm):
     
     def save(self, path: str):
         """保存模型"""
+        # 创建保存目录
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        
         torch.save({
             'policy_state_dict': self.policy.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),

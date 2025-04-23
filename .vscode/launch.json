@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: vehicle_drift",
+            "type": "python",
+            "request": "launch",
+            "module": "vehicle_drift.main",
+            "justMyCode": false,
+            // "python": "/home/youruser/anaconda3/envs/your_env_name/bin/python",
+            "args": [
+                "--env", "mujoco",
+                "--algo", "ppo",
+                "--mode", "train"
+            ]
+        }
+    ]
+}

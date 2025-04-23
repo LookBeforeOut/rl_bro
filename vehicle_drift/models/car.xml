@@ -28,24 +28,24 @@
       <!-- 前轮 -->
       <body name="front_left_wheel" pos="0.8 0.5 0">
         <joint name="front_left_steer" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
-        <joint name="front_left_drive" type="hinge" axis="0 1 0"/>
+        <joint name="front_left_drive" type="hinge" axis="0 1 0" range="-10000.0 10000.0"/>
         <geom name="front_left_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
       </body>
       
       <body name="front_right_wheel" pos="0.8 -0.5 0">
         <joint name="front_right_steer" type="hinge" axis="0 0 1" range="-0.5 0.5"/>
-        <joint name="front_right_drive" type="hinge" axis="0 1 0"/>
+        <joint name="front_right_drive" type="hinge" axis="0 1 0" range="-10000.0 10000.0"/>
         <geom name="front_right_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
       </body>
       
       <!-- 后轮 -->
       <body name="rear_left_wheel" pos="-0.8 0.5 0">
-        <joint name="rear_left_drive" type="hinge" axis="0 1 0"/>
+        <joint name="rear_left_drive" type="hinge" axis="0 1 0" range="-10000.0 10000.0"/>
         <geom name="rear_left_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
       </body>
       
       <body name="rear_right_wheel" pos="-0.8 -0.5 0">
-        <joint name="rear_right_drive" type="hinge" axis="0 1 0"/>
+        <joint name="rear_right_drive" type="hinge" axis="0 1 0" range="-10000.0 10000.0"/>
         <geom name="rear_right_wheel" type="cylinder" size="0.2 0.1" material="wheel"/>
       </body>
     </body>
@@ -53,11 +53,11 @@
   
   <actuator>
     <!-- 转向控制 -->
-    <motor name="steering" joint="front_left_steer" gear="1"/>
-    <motor name="steering" joint="front_right_steer" gear="1"/>
-    
+    <motor name="steering_left" joint="front_left_steer" gear="1"/>
+    <motor name="steering_right" joint="front_right_steer" gear="1"/>
+
     <!-- 驱动控制 -->
-    <motor name="throttle" joint="rear_left_drive" gear="100"/>
-    <motor name="throttle" joint="rear_right_drive" gear="100"/>
+    <motor name="throttle_left" joint="rear_left_drive" gear="100"/>
+    <motor name="throttle_right" joint="rear_right_drive" gear="100"/>
   </actuator>
 </mujoco> 
