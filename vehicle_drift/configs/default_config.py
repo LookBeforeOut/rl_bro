@@ -6,7 +6,7 @@ ENV_CONFIG = {
         'model_path': 'models/car.xml',
         'control_freq': 50,
         'sim_freq': 500,
-        'render_mode': 'human'
+        'render_mode': 'human'  # 改为human模式
     },
     'chrono': {
         'model_path': 'models/vehicle.chrono',

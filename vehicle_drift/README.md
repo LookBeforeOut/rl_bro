@@ -85,3 +85,7 @@ python main.py --env mujoco --algo ppo --mode eval --model models/best_model.pt
 2. 使用Chrono环境需要安装Project Chrono
 3. 训练过程中会自动保存最佳模型
 4. 建议使用GPU进行训练 
+
+
+1. 训练：python -m vehicle_drift.main --env mujoco --algo ppo --mode train
+2. 评测：python -m vehicle_drift.main --env mujoco --algo ppo --mode eval --render --model .\models\best_model.pt --video .\videos\eval
