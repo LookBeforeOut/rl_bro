@@ -4,15 +4,14 @@
 ENV_CONFIG = {
     'mujoco': {
         'model_path': 'models/car.xml',
-        'render_mode': 'human',
         'control_freq': 50,
         'sim_freq': 500,
-        'max_steps': 1000
+        'render_mode': 'human'
     },
     'chrono': {
-        'step_size': 0.001,
-        'render': True,
-        'max_steps': 1000
+        'model_path': 'models/vehicle.chrono',
+        'control_freq': 50,
+        'sim_freq': 500
     }
 }
 
@@ -36,9 +35,7 @@ TRAIN_CONFIG = {
     'max_episodes': 1000,
     'max_steps': 1000,
     'batch_size': 64,
-    'gamma': 0.99,
-    'lam': 0.95,
-    'save_path': 'models/best_model.pt',
+    'save_path': './models/best_model.pt',
     'log_interval': 10,
     'eval_interval': 100,
     'eval_episodes': 10

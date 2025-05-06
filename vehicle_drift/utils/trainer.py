@@ -3,6 +3,8 @@ from typing import Dict, Any, Optional
 import torch
 from vehicle_drift.algorithms.base_algorithm import BaseAlgorithm
 from vehicle_drift.envs.base_env import BaseDriftEnv
+from torch.utils.tensorboard import SummaryWriter
+import os
 
 class Trainer:
     """强化学习训练器"""
@@ -37,6 +39,9 @@ class Trainer:
         self.rew_buf = []
         self.val_buf = []
         self.logp_buf = []
+        
+        # 创建TensorBoard写入器
+        self.writer = SummaryWriter(log_dir=os.path.join('logs', 'train'))
         
     def compute_gae(self, rewards: np.ndarray, values: np.ndarray) -> np.ndarray:
         """计算广义优势估计
@@ -140,6 +145,13 @@ class Trainer:
         for episode in range(self.max_episodes):
             metrics = self.train_episode()
             
+            # 记录到TensorBoard
+            self.writer.add_scalar('Reward/episode_reward', metrics['episode_reward'], episode)
+            self.writer.add_scalar('Loss/policy_loss', metrics['policy_loss'], episode)
+            self.writer.add_scalar('Loss/value_loss', metrics['value_loss'], episode)
+            self.writer.add_scalar('Loss/entropy_loss', metrics['entropy_loss'], episode)
+            self.writer.add_scalar('Metrics/kl', metrics['kl'], episode)
+            
             # 打印训练信息
             print(f"Episode {episode+1}/{self.max_episodes}")
             print(f"Reward: {metrics['episode_reward']:.2f}")
@@ -154,19 +166,24 @@ class Trainer:
                 best_reward = metrics['episode_reward']
                 self.algorithm.save(save_path)
                 print(f"New best model saved with reward: {best_reward:.2f}")
+        
+        # 关闭TensorBoard写入器
+        self.writer.close()
     
-    def evaluate(self, num_episodes: int = 10) -> Dict[str, float]:
+    def evaluate(self, num_episodes: int = 10, render: bool = False, video_path: str = None) -> Dict[str, float]:
         """评估模型
         
         Args:
             num_episodes: 评估回合数
+            render: 是否渲染环境
+            video_path: 视频保存路径，如果为None则不保存视频
             
         Returns:
             metrics: 评估指标
         """
         rewards = []
         
-        for _ in range(num_episodes):
+        for episode in range(num_episodes):
             obs = self.env.reset()
             episode_reward = 0
             
@@ -178,7 +195,13 @@ class Trainer:
                 if done:
                     break
             
+            # 保存轨迹图
+            if video_path is not None:
+                plot_path = f"{video_path}_episode_{episode+1}.png"
+                self.env.save_trajectory_plot(plot_path)
+            
             rewards.append(episode_reward)
+            print(f"Episode {episode+1}/{num_episodes}, Reward: {episode_reward:.2f}")
         
         return {
             'mean_reward': np.mean(rewards),

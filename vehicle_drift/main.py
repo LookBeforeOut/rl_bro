@@ -44,6 +44,10 @@ def main():
                         help='Mode to run (train or eval)')
     parser.add_argument('--model', type=str, default=None,
                         help='Path to model file for evaluation')
+    parser.add_argument('--render', action='store_true',
+                        help='Render the environment during evaluation')
+    parser.add_argument('--video', type=str, default=None,
+                        help='Path to save evaluation videos')
     args = parser.parse_args()
     
     # 加载配置
@@ -69,7 +73,7 @@ def main():
         # 评估模型
         if args.model:
             algo.load(args.model)
-        metrics = trainer.evaluate()
+        metrics = trainer.evaluate(render=args.render, video_path=args.video)
         print("Evaluation Metrics:")
         print(f"Mean Reward: {metrics['mean_reward']:.2f}")
         print(f"Std Reward: {metrics['std_reward']:.2f}")
