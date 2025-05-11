@@ -191,6 +191,9 @@ class Trainer:
                 action = self.algorithm.act(obs, deterministic=True)
                 obs, reward, done, _ = self.env.step(action)
                 episode_reward += reward
+
+                if render:
+                    self.env.render()
                 
                 if done:
                     break

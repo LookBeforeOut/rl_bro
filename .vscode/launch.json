@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: vehicle_drift",
+            "name": "Python: train_vehicle_drift",
             "type": "python",
             "request": "launch",
             "module": "vehicle_drift.main",
@@ -11,8 +11,27 @@
             "args": [
                 "--env", "mujoco",
                 "--algo", "ppo",
-                "--mode", "train"
+                "--mode", "train",
             ]
-        }
+        },
+        {
+            "name": "Python: eval_vehicle_drift",
+            "type": "python",
+            "request": "launch",
+            "module": "vehicle_drift.main",
+            // "python": "/home/youruser/anaconda3/envs/your_env_name/bin/python",
+            "args": [
+                "--env", "mujoco",
+                "--algo", "ppo",
+                "--mode", "eval",
+                "--render",
+                "--model", "${workspaceFolder}/models/best_model.pt",
+                "--video", "${workspaceFolder}/videos/eval"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
     ]
 }
+
+

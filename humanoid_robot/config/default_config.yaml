@@ -1,0 +1,32 @@
+# Training Configuration
+training:
+  num_episodes: 1000
+  max_steps_per_episode: 1000
+  learning_rate: 0.0003
+  gamma: 0.99
+  batch_size: 64
+  buffer_size: 1000000
+
+# Environment Configuration
+environment:
+  robot_type: "humanoid"
+  control_frequency: 50  # Hz
+  simulation_timestep: 0.002  # seconds
+  reward_weights:
+    position_tracking: 1.0
+    energy_efficiency: 0.1
+    stability: 0.5
+
+# Model Configuration
+model:
+  actor_hidden_layers: [256, 256]
+  critic_hidden_layers: [256, 256]
+  activation: "relu"
+  use_batch_norm: true
+
+# Logging Configuration
+logging:
+  log_dir: "logs"
+  save_interval: 100
+  eval_interval: 50
+  tensorboard: true 
